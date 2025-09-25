@@ -27,7 +27,7 @@ class DepthFirstSearch:
 
           # Si la salida coincide con el objetivo..
         if Grid.objective_test(grid, root.state):
-            return Solution(root, explored, root.cost)
+            return Solution(root, reached, root.cost)
 
         # la frontera se maneja como una pila 
         frontier = StackFrontier()
