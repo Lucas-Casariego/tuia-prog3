@@ -95,6 +95,15 @@ class Grid:
             bool: True if the cell is the goal, False otherwise
         """
         return pos == self.end
+    
+    # la distancia retornada es un entero positivo
+    def heuristic_manhattan(self, pos: tuple[int, int]) -> int:
+        dist_x = abs(pos[0] - self.end[0])
+        dist_y = abs(pos[1] - self.end[1])
+
+        manhattan_dist = dist_x + dist_y
+
+        return manhattan_dist
 
     def individual_cost(self, pos: tuple[int, int], action: str) -> int:
         """Get the cost of performing an action from a cell
