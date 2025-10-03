@@ -23,7 +23,23 @@ class GreedyBestFirstSearch:
         reached[root.state] = root.cost
 
         # Initialize frontier with the root node
-        # TODO Complete the rest!!
-        # ...
+
+        frontier = PriorityQueueFrontier()
+        frontier.add(root, Grid.heuristic_manhattan(grid, root.state))
+
+        while not frontier.is_empty():
+            n = frontier.pop()
+            
+            if(Grid.objective_test(grid, n.state)):
+                return Solution(n, reached)
+            
+            for action in Grid.actions(grid, n.state):
+                s2 = Grid.result(grid, n.state, action)
+                c2 = n.cost + Grid.individual_cost(grid, n.state, action)
+
+                if s2 not in reached or c2 < reached[s2]:
+                    n2 = Node("", s2, c2, n, action)
+                    reached[s2] = c2
+                    frontier.add(n2, Grid.heuristic_manhattan(grid, n2.state))
 
         return NoSolution(reached)
