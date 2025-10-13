@@ -32,17 +32,17 @@ class BreadthFirstSearch:
         frontier.add(root)
 
         while not frontier.is_empty():
-            n = frontier.remove()
+           parent_n = frontier.remove()
             # expandimos el nodo según todas las acciones posibles
-            for action in Grid.actions(grid, n.state):
-                s2 = Grid.result(grid, n.state, action)
-                if s2 not in reached:
-                    n2 = Node("", s2, n.cost + Grid.individual_cost(grid, n.state, action), n, action)
+            for action in Grid.actions(grid,parent_n.state):
+                new_state = Grid.result(grid,parent_n.state, action)
+                if new_state not in reached:
+                    child_n = Node("", new_state, parent_n.cost + Grid.individual_cost(grid, parent_n.state, action), parent_n, action)
 
-                    if Grid.objective_test(grid, s2):
-                        return Solution(n2, reached, n2.cost)
+                    if Grid.objective_test(grid, new_state):
+                        return Solution(child_n, reached, child_n.cost)
 
-                    reached[s2] = True
-                    frontier.add(n2)
+                    reached[new_state] = True
+                    frontier.add(child_n)
 
         return NoSolution(reached)
