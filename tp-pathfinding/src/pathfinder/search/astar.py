@@ -31,6 +31,10 @@ class AStarSearch:
         while not frontier.is_empty():
             parent_n = frontier.pop()
             
+            # Si el nodo que saco de la frontera tiene un costo mayor a uno ya existente para el mismo estado, no lo expando.
+            if parent_n.cost > reached.get(parent_n.state, float("inf")):
+                continue
+
             if(Grid.objective_test(grid, parent_n.state)):
                 return Solution(parent_n, reached)
             
