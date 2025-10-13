@@ -5,7 +5,7 @@ from ..models.node import Node
 
 
 # h(n) = heurística de manhattan (subestimación admisible) nunca sobreestima el costo real, garantiza que A* encuentra el camino óptimo.
- class AStarSearch:
+class AStarSearch:
     @staticmethod
     def search(grid: Grid) -> Solution:
         """Find path between two points in a grid using A* Search
