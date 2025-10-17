@@ -4,6 +4,7 @@ from ..models.solution import NoSolution, Solution
 from ..models.node import Node
 
 
+# h(n) = heurística de manhattan (subestimación admisible) nunca sobreestima el costo real, garantiza que A* encuentra el camino óptimo.
 class AStarSearch:
     @staticmethod
     def search(grid: Grid) -> Solution:
@@ -28,18 +29,22 @@ class AStarSearch:
         frontier.add(root, root.cost + Grid.heuristic_manhattan(grid, root.state))
 
         while not frontier.is_empty():
-            n = frontier.pop()
+            parent_n = frontier.pop()
             
-            if(Grid.objective_test(grid, n.state)):
-                return Solution(n, reached)
-            
-            for action in Grid.actions(grid, n.state):
-                s2 = Grid.result(grid, n.state, action)
-                c2 = n.cost + Grid.individual_cost(grid, n.state, action)
+            # Si el nodo que saco de la frontera tiene un costo mayor a uno ya existente para el mismo estado, no lo expando.
+            if parent_n.cost > reached.get(parent_n.state, float("inf")):
+                continue
 
-                if s2 not in reached or c2 < reached[s2]:
-                    n2 = Node("", s2, c2, n, action)
-                    reached[s2] = c2
-                    frontier.add(n2, n2.cost + Grid.heuristic_manhattan(grid, n2.state))
+            if(Grid.objective_test(grid, parent_n.state)):
+                return Solution(parent_n, reached)
+            
+            for action in Grid.actions(grid, parent_n.state):
+                new_state = Grid.result(grid, parent_n.state, action)
+                accum_cost = parent_n.cost + Grid.individual_cost(grid, parent_n.state, action)
+
+                if new_state not in reached or accum_cost < reached[new_state]:
+                    child_n = Node("", new_state, accum_cost, parent_n, action)
+                    reached[new_state] = accum_cost
+                    frontier.add(child_n, child_n.cost + Grid.heuristic_manhattan(grid, child_n.state))
 
         return NoSolution(reached)

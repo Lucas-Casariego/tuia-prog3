@@ -28,18 +28,18 @@ class GreedyBestFirstSearch:
         frontier.add(root, Grid.heuristic_manhattan(grid, root.state))
 
         while not frontier.is_empty():
-            n = frontier.pop()
+            parent_n = frontier.pop()
             
-            if(Grid.objective_test(grid, n.state)):
-                return Solution(n, reached)
+            if(Grid.objective_test(grid, parent_n.state)):
+                return Solution(parent_n, reached)
             
-            for action in Grid.actions(grid, n.state):
-                s2 = Grid.result(grid, n.state, action)
-                c2 = n.cost + Grid.individual_cost(grid, n.state, action)
+            for action in Grid.actions(grid, parent_n.state):
+                new_state = Grid.result(grid, parent_n.state, action)
+                accum_cost = parent_n.cost + Grid.individual_cost(grid, parent_n.state, action)
 
-                if s2 not in reached or c2 < reached[s2]:
-                    n2 = Node("", s2, c2, n, action)
-                    reached[s2] = c2
-                    frontier.add(n2, Grid.heuristic_manhattan(grid, n2.state))
+                if new_state not in reached or accum_cost < reached[new_state]:
+                    child_n = Node("", new_state, accum_cost, parent_n, action)
+                    reached[new_state] = accum_cost
+                    frontier.add(child_n, Grid.heuristic_manhattan(grid, child_n.state))
 
         return NoSolution(reached)
